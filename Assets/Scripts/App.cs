@@ -5,7 +5,7 @@ using Values;
 
 public class App : MonoBehaviour {
     [SerializeField] private Transform _objectsRoot;
-    [SerializeField] private float _gravityConstant;
+    [SerializeField] private double _gravityConstant;
     private PhysicsEngine _physicsEngine;
 
     private TimeProvider _timeProvider;
@@ -13,7 +13,7 @@ public class App : MonoBehaviour {
     private void Start() {
         _timeProvider = new TimeProvider();
 
-        var gravityConstantProperty = new ProxyValue<float>(
+        var gravityConstantProperty = new ProxyValue<double>(
             () => _gravityConstant,
             value => _gravityConstant = value);
         _physicsEngine = new PhysicsEngine(gravityConstantProperty);

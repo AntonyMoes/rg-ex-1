@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
+using Math;
 using Time;
 using UnityEngine;
 using Values;
 
 namespace Physics {
     public class PhysicsEngine : IFrameProcessor {
-        private readonly Dictionary<PhysicsBody, Vector2> _forces = new Dictionary<PhysicsBody, Vector2>();
+        private readonly Dictionary<PhysicsBody, Vector2Double> _forces = new Dictionary<PhysicsBody, Vector2Double>();
         private readonly List<PhysicsBody> _physicsBodies = new List<PhysicsBody>();
 
-        public PhysicsEngine(Value<float> gravityConstant) {
+        public PhysicsEngine(Value<double> gravityConstant) {
             GravityConstant = gravityConstant;
         }
 
-        public Value<float> GravityConstant { get; }
+        public Value<double> GravityConstant { get; }
 
         public void ProcessFrame(float frameTime) {
             for (var i = 0; i < _physicsBodies.Count; i++) {
@@ -49,8 +50,8 @@ namespace Physics {
             _forces.Remove(body);
         }
 
-        private float CalculateGravity(PhysicsBody a, PhysicsBody b) {
-            return GravityConstant.Val * a.Mass * b.Mass / Mathf.Pow((a.Position.Val - b.Position).magnitude, 2f);
+        private double CalculateGravity(PhysicsBody a, PhysicsBody b) {
+            return GravityConstant.Val * a.Mass * b.Mass / System.Math.Pow((a.Position.Val - b.Position).magnitude, 2d);
         }
     }
 }
