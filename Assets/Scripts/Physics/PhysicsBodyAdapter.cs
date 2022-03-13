@@ -1,4 +1,5 @@
-﻿using Math;
+﻿using System.Linq;
+using Math;
 using UnityEngine;
 using Values;
 
@@ -8,6 +9,7 @@ namespace Physics {
         [SerializeField] private Vector2 _velocity;
         [SerializeField] private float _velocityMagnitude;
         [SerializeField] private bool _stationary;
+        [SerializeField] private LineRenderer _trajectoryRenderer;
 
         public PhysicsBody PhysicsBody { get; private set; }
 
@@ -22,11 +24,13 @@ namespace Physics {
                 rotationProxy, (Vector2Double) _velocity, stationaryProxy);
             PhysicsBody.Position.AddUpdateListener(OnPositionUpdate);
             PhysicsBody.Velocity.AddUpdateListener(OnVelocityUpdate);
+            PhysicsBody.Trajectory.AddUpdateListener(OnTrajectoryUpdate);
         }
 
         public void Dispose() {
             PhysicsBody.Position.RemoveUpdateListener(OnPositionUpdate);
             PhysicsBody.Velocity.RemoveUpdateListener(OnVelocityUpdate);
+            PhysicsBody.Trajectory.RemoveUpdateListener(OnTrajectoryUpdate);
             PhysicsBody = null;
         }
 
@@ -37,6 +41,21 @@ namespace Physics {
         private void OnVelocityUpdate(Vector2Double velocity) {
             _velocity = velocity;
             _velocityMagnitude = _velocity.magnitude;
+        }
+
+        private void OnTrajectoryUpdate(Vector2Double[] trajectory) {
+            if (_trajectoryRenderer == null) {
+                return;
+            }
+
+            if (trajectory == null) {
+                _trajectoryRenderer.SetPositions(new Vector3[] { });
+                return;
+            }
+
+            var positions = trajectory.Select(p => PhysicsToGamePosition(p, transform.position.z)).ToArray();
+            _trajectoryRenderer.positionCount = positions.Length;
+            _trajectoryRenderer.SetPositions(positions);
         }
 
         private static Vector2Double GameToPhysicsPosition(Vector3 position) {

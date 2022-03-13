@@ -3,7 +3,7 @@
 namespace Values {
     public class UpdatedValue<T> : Value<T> {
         private readonly Value<T> _value;
-        private Action<T> _onValueSet;
+        private Action<T> _onValueUpdate;
 
         public UpdatedValue(T initialValue = default) {
             _value = initialValue;
@@ -21,20 +21,20 @@ namespace Values {
                 }
 
                 _value.Val = value;
-                _onValueSet?.Invoke(_value.Val);
+                TriggerUpdate();
             }
         }
 
         public void AddUpdateListener(Action<T> listener) {
-            _onValueSet += listener;
+            _onValueUpdate += listener;
         }
 
         public void RemoveUpdateListener(Action<T> listener) {
-            _onValueSet -= listener;
+            _onValueUpdate -= listener;
         }
 
-        public static implicit operator T(UpdatedValue<T> value) {
-            return value.Val;
+        public void TriggerUpdate() {
+            _onValueUpdate?.Invoke(_value.Val);
         }
     }
 }

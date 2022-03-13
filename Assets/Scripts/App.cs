@@ -6,17 +6,25 @@ using Values;
 public class App : MonoBehaviour {
     [SerializeField] private Transform _objectsRoot;
     [SerializeField] private double _gravityConstant;
-    private PhysicsEngine _physicsEngine;
+    [SerializeField] private float _trajectoryFrameTime;
+    [SerializeField] private int _trajectoryFrameCount;
 
+    private PhysicsEngine _physicsEngine;
     private TimeProvider _timeProvider;
 
     private void Start() {
         _timeProvider = new TimeProvider();
 
-        var gravityConstantProperty = new ProxyValue<double>(
+        var gravityConstantProxy = new ProxyValue<double>(
             () => _gravityConstant,
             value => _gravityConstant = value);
-        _physicsEngine = new PhysicsEngine(gravityConstantProperty);
+        var trajectoryFrameTimeProxy = new ProxyValue<float>(
+            () => _trajectoryFrameTime,
+            value => _trajectoryFrameTime = value);
+        var trajectoryFrameCountProxy = new ProxyValue<int>(
+            () => _trajectoryFrameCount,
+            value => _trajectoryFrameCount = value);
+        _physicsEngine = new PhysicsEngine(gravityConstantProxy, trajectoryFrameTimeProxy, trajectoryFrameCountProxy);
         _timeProvider.RegisterPhysicsFrameProcessor(_physicsEngine);
 
         var physicsBodies = _objectsRoot.GetComponentsInChildren<PhysicsBodyAdapter>();

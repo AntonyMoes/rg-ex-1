@@ -5,5 +5,9 @@
         public static implicit operator Value<T>(T value) {
             return new Value<T> {Val = value};
         }
+
+        public static implicit operator T(Value<T> value) {
+            return value.Val;
+        }
     }
 }
