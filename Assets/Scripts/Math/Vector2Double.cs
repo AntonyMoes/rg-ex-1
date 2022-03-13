@@ -7,13 +7,6 @@ namespace Math {
         public double x;
         public double y;
 
-        private static readonly Vector2Double zeroVector = new Vector2Double(0.0d, 0.0d);
-        private static readonly Vector2Double oneVector = new Vector2Double(1d, 1d);
-        private static readonly Vector2Double upVector = new Vector2Double(0.0d, 1d);
-        private static readonly Vector2Double downVector = new Vector2Double(0.0d, -1d);
-        private static readonly Vector2Double leftVector = new Vector2Double(-1d, 0.0d);
-        private static readonly Vector2Double rightVector = new Vector2Double(1d, 0.0d);
-
         public Vector2Double(double x, double y) {
             this.x = x;
             this.y = y;
@@ -95,17 +88,26 @@ namespace Math {
             var num = System.Math.Sqrt(from.sqrMagnitude * to.sqrMagnitude);
             return num < 1.00000000362749E-15
                 ? 0.0f
-                : System.Math.Acos((Dot(from, to) / num).Clamp(-1d, 1d)) * 57.29578d;
+                : System.Math.Acos((Dot(from, to) / num).Clamp(-1d, 1d)) * Utils.Rad2Deg;
         }
 
         public static double SignedAngle(Vector2Double from, Vector2Double to) {
-            return Angle(from, to) * System.Math.Sign(from.x * to.y - from.y * to.x);
+            return Angle(from, to) * - /*need minus for clockwise*/System.Math.Sign(from.x * to.y - from.y * to.x);
         }
 
         public static double Distance(Vector2Double a, Vector2Double b) {
             var num1 = a.x - b.x;
             var num2 = a.y - b.y;
             return System.Math.Sqrt(num1 * num1 + num2 * num2);
+        }
+
+        public static Vector2Double Rotate(Vector2Double vec, double degrees) {
+            var sin = System.Math.Sin(degrees * Utils.Deg2Rad);
+            var cos = System.Math.Cos(degrees * Utils.Deg2Rad);
+
+            var newX = cos * vec.x + sin * vec.y;
+            var newY = cos * vec.y - sin * vec.x;
+            return new Vector2Double(newX, newY);
         }
 
         public static Vector2Double operator +(Vector2Double a, Vector2Double b) {
@@ -158,16 +160,16 @@ namespace Math {
             return new Vector2(Convert.ToSingle(v.x), Convert.ToSingle(v.y));
         }
 
-        public static Vector2Double zero => zeroVector;
+        public static Vector2Double zero { get; } = new Vector2Double(0.0d, 0.0d);
 
-        public static Vector2Double one => oneVector;
+        public static Vector2Double one { get; } = new Vector2Double(1d, 1d);
 
-        public static Vector2Double up => upVector;
+        public static Vector2Double up { get; } = new Vector2Double(0.0d, 1d);
 
-        public static Vector2Double down => downVector;
+        public static Vector2Double down { get; } = new Vector2Double(0.0d, -1d);
 
-        public static Vector2Double left => leftVector;
+        public static Vector2Double left { get; } = new Vector2Double(-1d, 0.0d);
 
-        public static Vector2Double right => rightVector;
+        public static Vector2Double right { get; } = new Vector2Double(1d, 0.0d);
     }
 }

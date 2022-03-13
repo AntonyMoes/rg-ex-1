@@ -1,5 +1,5 @@
 ﻿namespace Time {
     public interface IFrameProcessor {
-        public void ProcessFrame(float frameTime);
+        public void ProcessFrame(double frameTime);
     }
 }
