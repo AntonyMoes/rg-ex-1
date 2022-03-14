@@ -86,6 +86,18 @@ namespace Physics.Calculators {
             }
         }
 
+        public void RegisterBodyForTrajectoryCalculation(PhysicsBody body, double trajectoryTimeStep, int steps) {
+            throw new NotImplementedException();
+        }
+
+        public void UnregisterBodyForTrajectoryCalculation(PhysicsBody body) {
+            throw new NotImplementedException();
+        }
+
+        public IReadOnlyDictionary<PhysicsBody, Vector2Double[]> GetTrajectories() {
+            throw new NotImplementedException();
+        }
+
         private void OnBodyMassUpdate(PhysicsBody body) {
             UnregisterBody(body);
             RegisterBody(body);

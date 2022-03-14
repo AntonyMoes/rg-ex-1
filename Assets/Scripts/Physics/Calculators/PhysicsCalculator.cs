@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Math;
 
 namespace Physics.Calculators {
@@ -47,6 +48,18 @@ namespace Physics.Calculators {
                 body.Velocity.Val += forces[body] / body.Mass * timeStep;
                 body.Position.Val += body.Velocity.Val * timeStep;
             }
+        }
+
+        public void RegisterBodyForTrajectoryCalculation(PhysicsBody body, double trajectoryTimeStep, int steps) {
+            throw new NotImplementedException();
+        }
+
+        public void UnregisterBodyForTrajectoryCalculation(PhysicsBody body) {
+            throw new NotImplementedException();
+        }
+
+        public IReadOnlyDictionary<PhysicsBody, Vector2Double[]> GetTrajectories() {
+            throw new NotImplementedException();
         }
     }
 }
