@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Math;
 
 namespace Physics.Calculators {
     public class PhysicsCalculator : IPhysicsCalculator {
         private readonly List<PhysicsBody> _bodies = new List<PhysicsBody>();
+        private readonly Dictionary<PhysicsBody, TrajectoryData> _trajectories = new Dictionary<PhysicsBody, TrajectoryData>();
 
         private readonly Dictionary<PhysicsBody, Vector2Double> _gravityForces =
             new Dictionary<PhysicsBody, Vector2Double>();
+
+        private double _trajectoryTimeStep;
+        private double _timeToNextTrajectoryStep;
 
         public void RegisterBody(PhysicsBody body) {
             if (!_bodies.Contains(body)) {
@@ -48,18 +53,38 @@ namespace Physics.Calculators {
                 body.Velocity.Val += forces[body] / body.Mass * timeStep;
                 body.Position.Val += body.Velocity.Val * timeStep;
             }
+
+            // TODO advance trajectories
         }
 
-        public void RegisterBodyForTrajectoryCalculation(PhysicsBody body, double trajectoryTimeStep, int steps) {
-            throw new NotImplementedException();
+        // TODO maybe move this out to a shared parent???
+        public void SetTrajectoryTimeStep(double timeStep) {
+            _trajectoryTimeStep = timeStep;
+            _timeToNextTrajectoryStep = 0d;
+        }
+
+        public void RegisterBodyForTrajectoryCalculation(PhysicsBody body, int steps) {
+            if (!_trajectories.ContainsKey(body))
+                _trajectories.Add(body, new TrajectoryData {
+                    Trajectory = new Trajectory(steps),
+                    Recalculate = true
+                });
         }
 
         public void UnregisterBodyForTrajectoryCalculation(PhysicsBody body) {
-            throw new NotImplementedException();
+            _trajectories.Remove(body);
         }
 
-        public IReadOnlyDictionary<PhysicsBody, Vector2Double[]> GetTrajectories() {
-            throw new NotImplementedException();
+        public Vector2Double[] GetTrajectory(PhysicsBody body) {
+            if (_trajectories.TryGetValue(body, out var trajectoryData))
+                return trajectoryData.Trajectory.Path;
+
+            return Array.Empty<Vector2Double>();
+        }
+
+        private struct TrajectoryData {
+            public Trajectory Trajectory;
+            public bool Recalculate;
         }
     }
 }

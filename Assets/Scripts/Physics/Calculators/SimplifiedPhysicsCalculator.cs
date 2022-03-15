@@ -86,7 +86,11 @@ namespace Physics.Calculators {
             }
         }
 
-        public void RegisterBodyForTrajectoryCalculation(PhysicsBody body, double trajectoryTimeStep, int steps) {
+        public void SetTrajectoryTimeStep(double timeStep) {
+            throw new NotImplementedException();
+        }
+
+        public void RegisterBodyForTrajectoryCalculation(PhysicsBody body, int steps) {
             throw new NotImplementedException();
         }
 
@@ -94,7 +98,7 @@ namespace Physics.Calculators {
             throw new NotImplementedException();
         }
 
-        public IReadOnlyDictionary<PhysicsBody, Vector2Double[]> GetTrajectories() {
+        public Vector2Double[] GetTrajectory(PhysicsBody body) {
             throw new NotImplementedException();
         }
 
